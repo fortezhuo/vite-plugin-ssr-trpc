@@ -1,24 +1,16 @@
 import React from 'react'
 import { Counter } from './Counter'
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from '../../server/trpc';
-
-const client = createTRPCProxyClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: 'http://localhost:3000/api/trpc',
-    }),
-  ],
-});
+import { trpc } from '../../trpc'
 
 export { Page }
 
 function Page() {
   const [data, setData] = React.useState("")
+  const client = trpc.useContext()
 
   React.useEffect(() => {
     ; (async function () {
-      const data = await client.greet.query("World")
+      const data = await client.greet.fetch("World")
       setData(data.greeting)
     })()
   }, [])

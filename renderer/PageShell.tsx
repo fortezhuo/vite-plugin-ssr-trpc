@@ -4,26 +4,38 @@ import { PageContextProvider } from './usePageContext'
 import type { PageContext } from './types'
 import './PageShell.css'
 import { Link } from './Link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { trpc, client } from '../trpc'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+
+const queryClient = new QueryClient()
 
 export { PageShell }
 
 function PageShell({ children, pageContext }: { children: React.ReactNode; pageContext: PageContext }) {
   return (
     <React.StrictMode>
-      <PageContextProvider pageContext={pageContext}>
-        <Layout>
-          <Sidebar>
-            <Logo />
-            <Link className="navitem" href="/">
-              Home
-            </Link>
-            <Link className="navitem" href="/about">
-              About
-            </Link>
-          </Sidebar>
-          <Content>{children}</Content>
-        </Layout>
-      </PageContextProvider>
+      <trpc.Provider client={client} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          <PageContextProvider pageContext={pageContext}>
+            <AnimatePresence>
+              <Layout>
+                <Sidebar>
+                  <Logo />
+                  <Link className="navitem" href="/">
+                    Home
+                  </Link>
+                  <Link className="navitem" href="/about">
+                    About
+                  </Link>
+                </Sidebar>
+                <Content>{children}</Content>
+              </Layout>
+            </AnimatePresence>
+          </PageContextProvider>
+        </QueryClientProvider>
+      </trpc.Provider>
     </React.StrictMode>
   )
 }
@@ -44,7 +56,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 function Sidebar({ children }: { children: React.ReactNode }) {
   return (
-    <div
+    <motion.div
       style={{
         padding: 20,
         flexShrink: 0,
@@ -55,7 +67,7 @@ function Sidebar({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-    </div>
+    </motion.div>
   )
 }
 
