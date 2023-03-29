@@ -5,7 +5,7 @@ import fastify from 'fastify'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import * as vite from 'vite'
-import { renderPage } from 'vite-plugin-ssr'
+import { renderPage } from 'vite-plugin-ssr/server'
 import { appRouter, createContext } from './trpc'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 
